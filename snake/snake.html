@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>Snake</title>
+	<script type="text/javascript" src="./snake.js"></script>
+	<style type="text/css">
+		body{
+			background-color: #4690b7;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		#gameZoom{
+			border: 1px solid #fff;
+			margin: 60px 0 0 150px;
+			float: left;
+			border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			-ms-border-radius: 5px;
+
+		}
+		.info{
+			width: 150px;
+			height: 600px;
+			border: 1px solid #fff;
+			float: left;
+			margin-left: 20px;
+			margin-top: 60px;
+			border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			-ms-border-radius: 5px;
+		}
+		.info .show{
+			width: 100%;
+			height: 60%;
+		}
+	</style>
+</head>
+<body onkeyup = "control(event)">
+	<canvas id="gameZoom" width='700' height='600'></canvas>
+	<div class="info">
+		<div class="show"></div>
+		<div class="ctrl">
+			<input type="button" value="开始" id="start" onclick="startGame()">
+		</div>
+	</div>
+	<audio id="background_music" preload="auto">
+		<source src = "./MEDIA/Always With Me.mp3" type="audio/mp3">
+	</audio>
+	<audio id="eat_music" preload="auto">
+		<source src = "./MEDIA/DRIP07.ogv" type="audio/ogv">
+	</audio>
+	
+	<input type="button" value="重玩" id="replay">
+	
+	<script type="text/javascript">
+		var gameZoom = document.getElementById('gameZoom');
+		var background_music = document.getElementById('background_music');
+		var eat_music = document.getElementById('eat_music');
+		var snake = new Snake(gameZoom);
+		
+		function startGame(){
+			if(snake.status == 0) {
+				background_music.pause();
+				snake.initSnake();
+				alert('Game Over!');
+				gameZoom.getContext('2d').clearRect(0,0,700,600);
+				return;
+			}
+			
+			background_music.play();
+			var oldCount = snake.count;
+			snake.move();
+			if(oldCount < snake.count){
+				background_music.pause();
+				eat_music.play();
+				//setTimeout("musicControl()", 3000);
+
+			}
+			snake.updateSnake();
+			setTimeout("startGame()", 500);
+		}
+		//document.addEventListener('keyup',control(event), false);
+		
+
+		function control(evt){
+			var evt = evt || window.event;
+			switch(evt.keyCode){
+				case 38: // up
+					snake.direct = 3;
+					break;
+				case 40: //down
+					snake.direct = 4;
+					break;
+				case 37: // left
+					snake.direct = 1;
+					break;
+				case 39: // right
+					snake.direct = 2;
+			}
+		}
+
+		function musicControl(){
+			eat_music.pause();
+			background_music.play();
+		}
+	</script>
+</body>
+</html>
